@@ -7,7 +7,6 @@ def encontrar_componentes_conexos(graph):
      Encuentra todos los componentes conexos de un grafo 
      
      Args: toma como argumento un diccionario de  clave nodo valor lista de adyacencia
-
      Lista de listas donde cada lista son los nodos conexos
      
      """
@@ -34,4 +33,28 @@ def encontrar_componentes_conexos(graph):
             componente_actual.sort()
             componentes.append(componente_actual)
 
-        return componentes
+    return componentes
+
+
+
+def criticidad_de_componentes(graph):
+
+    """
+    Me devuelve el numero de conexiones que tiene cada nodo
+    Args:  Toma como argumento un diccionario de clave nodo valor lista de adyacencia
+    retorna el numero de conexiones que tiene cada nodo
+    """
+    criticidad = {}
+    ## me creo un un mapa que contendra el grado y todos los nodos que contengan ese valor
+    for nodo, vecinos in graph.items():
+        grado = len(vecinos)
+
+        if grado not in criticidad:
+            criticidad[grado] = [nodo]
+        else:
+            criticidad[grado].append(nodo)
+
+    for grado in criticidad:
+        criticidad[grado].sort()
+
+    return criticidad
