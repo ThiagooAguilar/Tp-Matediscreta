@@ -28,7 +28,35 @@ def load_graph(path):
         Adjacency dictionary {node: [neighbors]}
     """
     # TODO: Implement
-    pass
+    graph = {}
+    try:
+        with open(path, 'r') as f:
+            for line in f:
+                # Quitamos espacios extra y dividimos la línea
+                parts = line.strip().split()
+
+                if not parts:
+                    continue
+
+                u = parts[0]
+                v = parts[1]
+
+
+                if u not in graph:
+                    graph[u] = []
+                if v not in graph:
+                    graph[v] = []
+
+                if v not in graph[u]:
+                    graph[u].append(v)
+                if u not in graph[v]:
+                    graph[v].append(u)
+
+    except FileNotFoundError:
+        print(f"Error: Archivo no encontrado en la ruta {path}")
+        return {}
+
+    return graph
 
 
 def load_weighted_graph(path):
@@ -42,7 +70,41 @@ def load_weighted_graph(path):
         Adjacency dictionary {node: [(neighbor, weight), ...]}
     """
     # TODO: Implement
-    pass
+    graph = {}
+    try:
+        with open(path, 'r') as f:
+            for line in f:
+                # Quitamos espacios extra y dividimos la línea
+                parts = line.strip().split()
+
+                if not parts or len(parts) < 3:
+                    continue
+
+                u = parts[0]
+                v = parts[1]
+
+                try:
+                    weight = int(parts[2])  # Convertir el peso a entero
+                except ValueError:
+                    print(f"Advertencia: Peso inválido '{parts[2]}' en la línea: {line.strip()}")
+                    continue
+
+                if u not in graph:
+                    graph[u] = []
+                if v not in graph:
+                    graph[v] = []
+
+
+                if (v, weight) not in graph[u]:
+                    graph[u].append((v, weight))
+                if (u, weight) not in graph[v]:
+                    graph[v].append((u, weight))
+
+    except FileNotFoundError:
+        print(f"Error: Archivo no encontrado en la ruta {path}")
+        return {}
+
+    return graph
 
 
 def process_queries(queries_file, output_file, electric_graph, road_graph, water_graph):
