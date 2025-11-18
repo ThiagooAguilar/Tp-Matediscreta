@@ -192,7 +192,7 @@ def process_queries(queries_file, output_file, electric_graph, road_graph, water
                         f_out.write(output_str)
 
                     elif comando == "PUENTES_Y_ARTICULACIONES":
-                        puentes, articulaciones = puentes_y_articulaciones(graph)
+                        articulaciones, puentes = puentes_y_articulaciones(graph)
                         output_str = format_puentes_y_articulaciones(articulaciones, puentes)
                         f_out.write(output_str)
 

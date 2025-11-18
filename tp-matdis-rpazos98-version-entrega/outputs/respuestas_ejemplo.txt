@@ -4,22 +4,17 @@ COMPONENTES CONEXOS - RED ELÉCTRICA
 Componente 1 (5 nodos):
   Belgrano, Nunez, Palermo, Recoleta, Retiro
 Componente 2 (4 nodos):
-  #, Componente, Grafo, Simula
-Componente 3 (4 nodos):
   Almagro, Boedo, Caballito, Flores
 ============================================================
 ORDEN DE FALLOS - RED ELÉCTRICA
 ============================================================
 Nodos ordenados por criticidad (menor grado = más crítico):
 
-Grado 1 (5 nodos):
-  Componente, Grafo, Nunez, Retiro, Simula
+Grado 1 (2 nodos):
+  Nunez, Retiro
 
 Grado 2 (7 nodos):
   Almagro, Belgrano, Boedo, Caballito, Flores, Palermo, Recoleta
-
-Grado 3 (1 nodos):
-  #
 
 ------------------------------------------------------------
 CAMINO MÍNIMO: Palermo → Retiro
@@ -43,3 +38,19 @@ Nodos cortados: Recoleta
 ------------------------------------------------------------
 Distancia total: None minutos
 Ruta alternativa: 
+============================================================
+PUNTOS CRÍTICOS - RED HÍDRICA
+============================================================
+
+ARTICULACIONES (3 nodos críticos):
+(Nodos cuya eliminación desconecta el grafo)
+
+  Belgrano, Palermo, Recoleta
+
+PUENTES (4 aristas críticas):
+(Aristas cuya eliminación desconecta el grafo)
+
+  • Belgrano ↔ Nunez
+  • Belgrano ↔ Palermo
+  • Palermo ↔ Recoleta
+  • Recoleta ↔ Retiro
