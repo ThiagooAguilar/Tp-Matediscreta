@@ -24,9 +24,12 @@ def load_graph(path):
     try:
         with open(path, 'r') as f:
             for line in f:
-                parts = line.strip().split()
-                if not parts:
+                line = line.strip()
+
+                if not line or line.startswith('#'):
                     continue
+
+                parts = line.split()
 
                 u = parts[0]
                 v = parts[1]
