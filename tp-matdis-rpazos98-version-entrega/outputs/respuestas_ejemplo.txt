@@ -19,25 +19,29 @@ Grado 2 (7 nodos):
 ------------------------------------------------------------
 CAMINO MÍNIMO: Palermo → Retiro
 ------------------------------------------------------------
-Distancia total: 8 minutos
+Distancia total: 8.0 minutos
 Ruta: Palermo → Recoleta → Retiro
 ------------------------------------------------------------
 CAMINO MÍNIMO: Boedo → Flores
 ------------------------------------------------------------
-Distancia total: 9 minutos
+Distancia total: 9.0 minutos
 Ruta: Boedo → Almagro → Flores
 ------------------------------------------------------------
 SIMULACIÓN DE CORTE: Palermo → Retiro
 Nodos cortados: Recoleta
 ------------------------------------------------------------
-Distancia total: None minutos
-Ruta alternativa: 
-------------------------------------------------------------
-SIMULACIÓN DE CORTE: Palermo → Retiro
-Nodos cortados: Recoleta
-------------------------------------------------------------
-Distancia total: None minutos
-Ruta alternativa: 
+Resultado: NO HAY RUTA ALTERNATIVA
+============================================================
+PLANTAS DE AGUA ASIGNADAS POR BARRIO
+============================================================
+Plantas disponibles: Flores, Nunez
+
+Planta Flores (4 barrios):
+  Almagro, Boedo, Caballito, Flores
+
+Planta Nunez (5 barrios):
+  Belgrano, Nunez, Palermo, Recoleta, Retiro
+
 ============================================================
 PUNTOS CRÍTICOS - RED HÍDRICA
 ============================================================

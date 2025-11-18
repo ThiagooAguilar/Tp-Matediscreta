@@ -64,7 +64,7 @@ def load_weighted_graph(path):
                 v = parts[1]
 
                 try:
-                    weight = int(parts[2])
+                    weight = float(parts[2])
                 except ValueError:
                     print(f"Advertencia: Peso inválido '{parts[2]}' en la línea: {line.strip()}")
                     continue
@@ -188,7 +188,7 @@ def process_queries(queries_file, output_file, electric_graph, road_graph, water
                         planta1 = args[0]
                         planta2 = args[1]
                         asignaciones = plantas_asignadas(graph, planta1, planta2)
-                        format_plantas_asignadas([planta1, planta2], asignaciones)
+                        output_str = format_plantas_asignadas([planta1, planta2], asignaciones)
                         f_out.write(output_str)
 
                     elif comando == "PUENTES_Y_ARTICULACIONES":

@@ -11,7 +11,7 @@ def camino_minimo(graph, origen, destino):
         o en cambio (None, []) si no existe el camino
     """
     if origen not in graph or destino not in graph:
-        return None, []
+        return float('inf'), []
 
     dist = {n: float("inf") for n in graph}
     dist[origen] = 0
@@ -36,7 +36,7 @@ def camino_minimo(graph, origen, destino):
                 heapq.heappush(pq, (nuevo, v))
 
     if dist[destino] == float("inf"):
-        return None, []
+        return float('inf'), []
 
     # reconstruir camino
     camino = []
