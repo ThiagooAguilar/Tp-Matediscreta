@@ -160,7 +160,7 @@ def process_queries(queries_file, output_file, electric_graph, road_graph, water
 
                         distancia, camino = camino_minimo(graph, origen, destino)
 
-                        output_str = format_camino_minimo(distancia, camino, origen, destino)
+                        output_str = format_camino_minimo(origen, destino, distancia, camino)
 
                         f_out.write(output_str)
 
@@ -171,7 +171,7 @@ def process_queries(queries_file, output_file, electric_graph, road_graph, water
                         destino = args[2]
 
                         distancia, camino = simulacion_corte(graph, cortes, origen, destino)
-
+                        
                         output_str = format_simulacion_corte(origen, destino, cortes, distancia, camino)
                         f_out.write(output_str)
 

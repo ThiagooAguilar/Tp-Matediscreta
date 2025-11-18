@@ -22,15 +22,15 @@ Grado 3 (1 nodos):
   #
 
 ------------------------------------------------------------
-CAMINO MÍNIMO: 8 → ['Palermo', 'Recoleta', 'Retiro']
+CAMINO MÍNIMO: Palermo → Retiro
 ------------------------------------------------------------
-Distancia total: Palermo minutos
-Ruta: R → e → t → i → r → o
+Distancia total: 8 minutos
+Ruta: Palermo → Recoleta → Retiro
 ------------------------------------------------------------
-CAMINO MÍNIMO: 9 → ['Boedo', 'Almagro', 'Flores']
+CAMINO MÍNIMO: Boedo → Flores
 ------------------------------------------------------------
-Distancia total: Boedo minutos
-Ruta: F → l → o → r → e → s
+Distancia total: 9 minutos
+Ruta: Boedo → Almagro → Flores
 ------------------------------------------------------------
 SIMULACIÓN DE CORTE: Palermo → Retiro
 Nodos cortados: Recoleta
