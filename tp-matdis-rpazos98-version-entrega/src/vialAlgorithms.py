@@ -70,46 +70,89 @@ def simulacion_corte(graph, nodos_cortados, origen, destino):
     return camino_minimo(reducido, origen, destino)
 
 
-#3 - RUTA DE RECOLECCIÓN
+#3 - RUTA DE RECOLECCIÓN (Usando Aproximación por MST)
+
+def _obtener_mst_prim(graph, todos_los_nodos):
+    """
+    Calcula el Árbol de Tendido Mínimo (MST) para todas
+    las componentes del grafo (un "bosque").
+    """
+    mst = {nodo: [] for nodo in graph}
+    visitados = set()
+    pq = [] # Fila de prioridad
+
+    # Iteramos sobre todos los nodos para encontrar componentes disconexas
+    for nodo_inicio_componente in todos_los_nodos:
+        if nodo_inicio_componente not in visitados:
+            # Empezamos Prim para una nueva componente
+            heapq.heappush(pq, (0, nodo_inicio_componente, nodo_inicio_componente))
+
+            while pq:
+                peso, u, v = heapq.heappop(pq)
+                
+                if v in visitados:
+                    continue
+                visitados.add(v)
+                
+                if u != v:
+                    mst[u].append((v, peso))
+                    mst[v].append((u, peso))
+                
+                for vecino, peso_arista in graph.get(v, []):
+                    if vecino not in visitados:
+                        heapq.heappush(pq, (peso_arista, v, vecino))
+    return mst
+
+def _dfs_preorden_ruta(mst, todos_los_nodos_ordenados):
+    """
+    Realiza un recorrido DFS (pre-orden) sobre el bosque MST
+    para generar una ruta, respetando el orden de inicio.
+    """
+    ruta = []
+    visitados = set()
+    
+    # Iteramos sobre la lista ordenada de barrios (de main.py)
+    for inicio_componente in todos_los_nodos_ordenados:
+        if inicio_componente not in visitados:
+            # Si no visitamos este nodo (y su componente),
+            # empezamos un nuevo DFS
+            stack = [inicio_componente]
+            
+            while stack:
+                u = stack.pop()
+                if u not in visitados:
+                    visitados.add(u)
+                    ruta.append(u)
+                    
+                    # Añadir vecinos al stack en orden alfabético reverso
+                    # para que el DFS los visite en orden alfabético
+                    vecinos_ordenados = sorted([v for v, w in mst[u]], reverse=True)
+                    for v in vecinos_ordenados:
+                        if v not in visitados:
+                            stack.append(v)
+    return ruta
+
 
 def ruta_recoleccion(graph, barrios):
     """
-    Aproximo con TSP usando el vecino mas cercano posible.
-
-    Devuelve:
-        (dist_total, [ruta_en_orden])
-        o en cambio (None, []) si algún barrio no lo peudo alcanzar.
+    Aproxima la ruta de recolección (TSP) usando el Árbol de Tendido Mínimo (MST).
+    La ruta se obtiene de un recorrido pre-orden del MST.
+    
+    Args:
+        graph: El grafo vial.
+        barrios: Lista ORDENADA de todos los barrios (de main.py).
     """
     if not barrios:
-        return 0, []
+        return 0.0, []
 
-    inicio = barrios[0]
-    restantes = set(barrios)
-    restantes.remove(inicio)
+    # 1. Construir el Bosque de Tendido Mínimo (MST)
+    #    Le pasamos la lista 'barrios' (que ya está ordenada)
+    #    para que itere sobre todos
+    mst = _obtener_mst_prim(graph, barrios)
 
-    ruta = [inicio]
-    total = 0
-    actual = inicio
+    # 2. Obtener la ruta haciendo un recorrido en pre-orden (DFS) sobre el MST
+    #    Le pasamos la lista 'barrios' (ordenada)
+    #    para asegurar el orden de inicio de componentes ("Almagro" primero)
+    ruta = _dfs_preorden_ruta(mst, barrios)
 
-    while restantes:
-        mejor = None
-        mejor_d = float("inf")
-        mejor_camino = []
-
-        for b in restantes:
-            d, cam = camino_minimo(graph, actual, b)
-            if d is not None and d < mejor_d:
-                mejor = b
-                mejor_d = d
-                mejor_camino = cam
-
-        if mejor is None:
-            return None, []
-
-        # Agregar solo los nuevos nodos al camino final
-        ruta.extend(mejor_camino[1:])
-        total += mejor_d
-        actual = mejor
-        restantes.remove(mejor)
-
-    return total, ruta
+    return 0.0, ruta # Devolvemos 0.0 como distancia, no se usa

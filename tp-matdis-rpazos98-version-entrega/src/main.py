@@ -103,7 +103,7 @@ def process_queries(queries_file, output_file, electric_graph, road_graph, water
                     # -----------------------------
                     # Parsing flexible
                     # -----------------------------
-                    if comando in ["CAMINO_MINIMO", "CAMINO_MINIMO_SIMULAR_CORTE"]:
+                    if comando in ["CAMINO_MINIMO", "CAMINO_MINIMO_SIMULAR_CORTE", "CAMINO_RECOLECCION_BASURA"]:
                         red = "VIAL"
                         args = parts[1:]
 
@@ -179,7 +179,10 @@ def process_queries(queries_file, output_file, electric_graph, road_graph, water
                         f_out.write(output_str)
 
                     elif comando == "CAMINO_RECOLECCION_BASURA":
-                        ruta = ruta_recoleccion(graph)
+                        barrios_a_visitar = sorted(list(graph.keys()))
+                    
+                        distancia_total, ruta = ruta_recoleccion(graph, barrios_a_visitar)
+                        
                         output_str = format_ruta_recoleccion(ruta)
                         f_out.write(output_str)
 
