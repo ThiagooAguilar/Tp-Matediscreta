@@ -54,7 +54,7 @@ def load_weighted_graph(path):
         with open(path, 'r') as f:
             for line in f:
                 parts = line.strip().split()
-                if not parts or len(parts) < 3:
+                if not parts or line.startswith('#') or len(parts) < 3:
                     continue
 
                 u = parts[0]
@@ -86,7 +86,7 @@ def load_weighted_graph(path):
 def process_queries(queries_file, output_file, electric_graph, road_graph, water_graph):
 
     try:
-        with open(output_file, 'w') as f_out:
+        with open(output_file, 'w', encoding='utf-8') as f_out:
             with open(queries_file, 'r') as f_in:
 
                 for line in f_in:

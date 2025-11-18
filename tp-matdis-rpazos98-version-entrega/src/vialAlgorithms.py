@@ -51,14 +51,13 @@ def camino_minimo(graph, origen, destino):
 
 #2 - SIMULACIÓN DE CORTE
 
-def simulacion_corte(graph, nodos_cortados):
+def simulacion_corte(graph, nodos_cortados, origen, destino):
     """
-    Devuelvo los componentes conexos del grafo vial
-    habiendo eliminado los grafos cortados
+    Camino mínimo entre origen y destino luego de cortar nodos.
     """
     nodos_cortados = set(nodos_cortados)
 
-    # construir grafo reducido
+    # Construir grafo reducido
     reducido = {}
     for u in graph:
         if u in nodos_cortados:
@@ -68,27 +67,8 @@ def simulacion_corte(graph, nodos_cortados):
             if v not in nodos_cortados:
                 reducido[u].append((v, w))
 
-    # BFS /// DFS
-    visitado = set()
-    comps = []
+    return camino_minimo(reducido, origen, destino)
 
-    for nodo in reducido:
-        if nodo not in visitado:
-            stack = [nodo]
-            comp = []
-            visitado.add(nodo)
-
-            while stack:
-                x = stack.pop()
-                comp.append(x)
-                for y, _ in reducido[x]:
-                    if y not in visitado:
-                        visitado.add(y)
-                        stack.append(y)
-
-            comps.append(sorted(comp))
-
-    return comps
 
 #3 - RUTA DE RECOLECCIÓN
 
