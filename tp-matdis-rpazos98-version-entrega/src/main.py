@@ -3,6 +3,7 @@ Graph analysis module for Buenos Aires city networks.
 Students must implement all functions marked with TODO.
 """
 from src.electricAlgorithms import encontrar_componentes_conexos, criticidad_de_componentes
+from src.vialAlgorithms import camino_minimo, simulacio_corte, ruta_recoleccion
 from src.output import (
     format_componentes_conexos,
     format_orden_fallos,
