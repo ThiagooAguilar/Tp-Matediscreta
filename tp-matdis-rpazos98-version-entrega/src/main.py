@@ -3,7 +3,7 @@ Graph analysis module for Buenos Aires city networks.
 Students must implement all functions marked with TODO.
 """
 from src.electricAlgorithms import encontrar_componentes_conexos, criticidad_de_componentes
-from src.vialAlgorithms import camino_minimo, simulacio_corte, ruta_recoleccion
+from src.vialAlgorithms import camino_minimo, simulacion_corte, ruta_recoleccion
 from src.output import (
     format_componentes_conexos,
     format_orden_fallos,
@@ -164,6 +164,34 @@ def process_queries(queries_file, output_file, electric_graph, road_graph, water
                         # Llama al formatter y escribe el resultado
                         output_str = format_orden_fallos(criticos_para_formatter)
                         f_out.write(output_str)
+
+                    elif comando == "CAMINO_MINIMO":
+                        origen = parts[2]
+                        destino = parts[3]
+
+                        distancia, camino = camino_minimo(graph, origen, destino)
+
+                        output_str = format_camino_minimo(distancia, camino)
+                        f_out.write(output_str)
+
+                    elif comando == "SIMULACION_CORTE":
+                        nodos_cortados = parts[2:]
+
+                        componentes = simulacion_corte(graph, nodos_cortados)
+
+                        output_str = format_simulacion_corte(componentes)
+                        f_out.write(output_str)
+
+
+                    elif comando == "RUTA_RECOLECCION":
+                        barrios = parts[2:]
+
+                        distancia, ruta = ruta_recoleccion(graph, barrios)
+
+                        output_str = format_ruta_recoleccion(distancia, ruta)
+                        f_out.write(output_str)
+
+
 
 
     except FileNotFoundError as e:
