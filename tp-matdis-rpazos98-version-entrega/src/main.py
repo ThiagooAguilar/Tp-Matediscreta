@@ -19,29 +19,16 @@ from src.output import (
 # -----------------------------
 
 def load_graph(path):
-    """
-    Load a simple graph from a file.
-
-    Args:
-        path: File path
-
-    Returns:
-        Adjacency dictionary {node: [neighbors]}
-    """
-    # TODO: Implement
     graph = {}
     try:
         with open(path, 'r') as f:
             for line in f:
-                # Quitamos espacios extra y dividimos la línea
                 parts = line.strip().split()
-
                 if not parts:
                     continue
 
                 u = parts[0]
                 v = parts[1]
-
 
                 if u not in graph:
                     graph[u] = []
@@ -61,23 +48,11 @@ def load_graph(path):
 
 
 def load_weighted_graph(path):
-    """
-    Load a weighted graph from a file.
-
-    Args:
-        path: File path
-
-    Returns:
-        Adjacency dictionary {node: [(neighbor, weight), ...]}
-    """
-    # TODO: Implement
     graph = {}
     try:
         with open(path, 'r') as f:
             for line in f:
-                # Quitamos espacios extra y dividimos la línea
                 parts = line.strip().split()
-
                 if not parts or len(parts) < 3:
                     continue
 
@@ -85,7 +60,7 @@ def load_weighted_graph(path):
                 v = parts[1]
 
                 try:
-                    weight = int(parts[2])  # Convertir el peso a entero
+                    weight = int(parts[2])
                 except ValueError:
                     print(f"Advertencia: Peso inválido '{parts[2]}' en la línea: {line.strip()}")
                     continue
@@ -94,7 +69,6 @@ def load_weighted_graph(path):
                     graph[u] = []
                 if v not in graph:
                     graph[v] = []
-
 
                 if (v, weight) not in graph[u]:
                     graph[u].append((v, weight))
@@ -109,31 +83,40 @@ def load_weighted_graph(path):
 
 
 def process_queries(queries_file, output_file, electric_graph, road_graph, water_graph):
-    """
-    Process queries from file and generate output.
 
-    Args:
-        queries_file: Path to queries file
-        output_file: Path to output file
-        electric_graph: Electric network graph
-        road_graph: Road network graph
-        water_graph: Water network graph
-    """
-    # Abrimos el archivo de salida para escribir (modo 'a' para anexar)
     try:
-        with open(output_file, 'a') as f_out:
-            # Abrimos el archivo de consultas para leer
+        with open(output_file, 'w') as f_out:
             with open(queries_file, 'r') as f_in:
 
                 for line in f_in:
                     line = line.strip()
-                    if not line or line.startswith('#'): continue  # Saltar líneas vacías o comentarios
+                    if not line or line.startswith('#'):
+                        continue
 
                     parts = line.split()
                     comando = parts[0]
-                    red = parts[1]
 
-                    # 1. Seleccionar el grafo correcto
+                    # -----------------------------
+                    # Parsing flexible
+                    # -----------------------------
+                    if comando in ["CAMINO_MINIMO", "CAMINO_MINIMO_SIMULAR_CORTE"]:
+                        red = "VIAL"
+                        args = parts[1:]
+
+                    elif comando in ["COMPONENTES_CONEXOS", "ORDEN_FALLOS"]:
+                        red = "ELECTRICA"
+                        args = parts[1:]
+
+                    else:
+                        if len(parts) < 2:
+                            print(f"Advertencia: Consulta incompleta: {line}")
+                            continue
+                        red = parts[1]
+                        args = parts[2:]
+
+                    # -----------------------------
+                    # Select graph
+                    # -----------------------------
                     if red == "ELECTRICA":
                         graph = electric_graph
                     elif red == "VIAL":
@@ -141,19 +124,20 @@ def process_queries(queries_file, output_file, electric_graph, road_graph, water
                     elif red == "HIDRICA":
                         graph = water_graph
                     else:
-                        continue  # Comando o red no reconocida
+                        print(f"Advertencia: Red no reconocida para el comando {comando}: {red}")
+                        continue
 
-                    # 2. Procesar el COMANDO
+                    # -----------------------------
+                    # Commands
+                    # -----------------------------
+
+                    # --- Electric network ---
                     if comando == "COMPONENTES_CONEXOS":
-                        # Llama a la función de análisis
                         componentes = encontrar_componentes_conexos(graph)
-
-                        # Llama al formatter y escribe el resultado en el archivo de salida
                         output_str = format_componentes_conexos(componentes)
                         f_out.write(output_str)
 
                     elif comando == "ORDEN_FALLOS":
-                        # Llama a la función de análisi
                         criticos_agrupados = criticidad_de_componentes(graph)
 
                         criticos_para_formatter = []
@@ -161,38 +145,52 @@ def process_queries(queries_file, output_file, electric_graph, road_graph, water
                             for nodo in nodos:
                                 criticos_para_formatter.append((nodo, grado))
 
-                        # Llama al formatter y escribe el resultado
                         output_str = format_orden_fallos(criticos_para_formatter)
                         f_out.write(output_str)
 
+                    # --- Road network ---
                     elif comando == "CAMINO_MINIMO":
-                        origen = parts[2]
-                        destino = parts[3]
+                        origen = args[0]
+                        destino = args[1]
 
                         distancia, camino = camino_minimo(graph, origen, destino)
 
-                        output_str = format_camino_minimo(distancia, camino)
+                        # *** FIX CORRECTO ***
+                        output_str = format_camino_minimo(distancia, camino, origen, destino)
+
                         f_out.write(output_str)
 
-                    elif comando == "SIMULACION_CORTE":
-                        nodos_cortados = parts[2:]
+                    elif comando == "CAMINO_MINIMO_SIMULAR_CORTE":
+                        cortes_str = args[0].strip('{}')
+                        cortes = {c.strip() for c in cortes_str.split(',')}
+                        origen = args[1]
+                        destino = args[2]
 
-                        componentes = simulacion_corte(graph, nodos_cortados)
-
-                        output_str = format_simulacion_corte(componentes)
+                        camino = simulacion_corte(graph, origen, destino, cortes)
+                        output_str = format_simulacion_corte(camino, origen, destino, cortes)
                         f_out.write(output_str)
 
-
-                    elif comando == "RUTA_RECOLECCION":
-                        barrios = parts[2:]
-
-                        distancia, ruta = ruta_recoleccion(graph, barrios)
-
-                        output_str = format_ruta_recoleccion(distancia, ruta)
+                    elif comando == "CAMINO_RECOLECCION_BASURA":
+                        ruta = ruta_recoleccion(graph)
+                        output_str = format_ruta_recoleccion(ruta)
                         f_out.write(output_str)
 
+                    # --- Water network (disabled) ---
+                    """
+                    elif comando == "PLANTAS_ASIGNADAS":
+                        planta1 = args[0]
+                        planta2 = args[1]
+                        asignaciones = plantas_asignadas(graph, planta1, planta2)
+                        output_str = format_plantas_asignadas(asignaciones)
+                        f_out.write(output_str)
 
-
+                    elif comando == "PUENTES_Y_ARTICULACIONES":
+                        puentes, articulaciones = puentes_y_articulaciones(graph)
+                        output_str = format_puentes_y_articulaciones(puentes, articulaciones)
+                        f_out.write(output_str)
+                    """
 
     except FileNotFoundError as e:
         print(f"Error: Archivo no encontrado - {e}")
+    except Exception as e:
+        print(f"Ocurrió un error al procesar las consultas: {e}")
