@@ -4,6 +4,7 @@ Students must implement all functions marked with TODO.
 """
 from src.electricAlgorithms import encontrar_componentes_conexos, criticidad_de_componentes
 from src.vialAlgorithms import camino_minimo, simulacion_corte, ruta_recoleccion
+from src.hidricAlgorithms import plantas_asignadas, puentes_y_articulaciones 
 from src.output import (
     format_componentes_conexos,
     format_orden_fallos,
@@ -175,20 +176,18 @@ def process_queries(queries_file, output_file, electric_graph, road_graph, water
                         output_str = format_ruta_recoleccion(ruta)
                         f_out.write(output_str)
 
-                    # --- Water network (disabled) ---
-                    """
+                    # --- Water network ---
                     elif comando == "PLANTAS_ASIGNADAS":
                         planta1 = args[0]
                         planta2 = args[1]
                         asignaciones = plantas_asignadas(graph, planta1, planta2)
-                        output_str = format_plantas_asignadas(asignaciones)
+                        format_plantas_asignadas([planta1, planta2], asignaciones)
                         f_out.write(output_str)
 
                     elif comando == "PUENTES_Y_ARTICULACIONES":
                         puentes, articulaciones = puentes_y_articulaciones(graph)
-                        output_str = format_puentes_y_articulaciones(puentes, articulaciones)
+                        output_str = format_puentes_y_articulaciones(articulaciones, puentes)
                         f_out.write(output_str)
-                    """
 
     except FileNotFoundError as e:
         print(f"Error: Archivo no encontrado - {e}")
