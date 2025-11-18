@@ -31,3 +31,15 @@ CAMINO MÍNIMO: 9 → ['Boedo', 'Almagro', 'Flores']
 ------------------------------------------------------------
 Distancia total: Boedo minutos
 Ruta: F → l → o → r → e → s
+------------------------------------------------------------
+SIMULACIÓN DE CORTE: Palermo → Retiro
+Nodos cortados: Recoleta
+------------------------------------------------------------
+Distancia total: None minutos
+Ruta alternativa: 
+------------------------------------------------------------
+SIMULACIÓN DE CORTE: Palermo → Retiro
+Nodos cortados: Recoleta
+------------------------------------------------------------
+Distancia total: None minutos
+Ruta alternativa: 

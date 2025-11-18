@@ -107,6 +107,10 @@ def process_queries(queries_file, output_file, electric_graph, road_graph, water
                     elif comando in ["COMPONENTES_CONEXOS", "ORDEN_FALLOS"]:
                         red = "ELECTRICA"
                         args = parts[1:]
+                    
+                    elif comando in ["PLANTAS_ASIGNADAS", "PUENTES_Y_ARTICULACIONES"]:
+                        red = "HIDRICA"
+                        args = parts[1:]
 
                     else:
                         if len(parts) < 2:
@@ -156,7 +160,6 @@ def process_queries(queries_file, output_file, electric_graph, road_graph, water
 
                         distancia, camino = camino_minimo(graph, origen, destino)
 
-                        # *** FIX CORRECTO ***
                         output_str = format_camino_minimo(distancia, camino, origen, destino)
 
                         f_out.write(output_str)
@@ -167,8 +170,9 @@ def process_queries(queries_file, output_file, electric_graph, road_graph, water
                         origen = args[1]
                         destino = args[2]
 
-                        camino = simulacion_corte(graph, origen, destino, cortes)
-                        output_str = format_simulacion_corte(camino, origen, destino, cortes)
+                        distancia, camino = simulacion_corte(graph, cortes, origen, destino)
+
+                        output_str = format_simulacion_corte(origen, destino, cortes, distancia, camino)
                         f_out.write(output_str)
 
                     elif comando == "CAMINO_RECOLECCION_BASURA":
